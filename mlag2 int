@@ -1,0 +1,33 @@
+auto swp1
+iface swp1
+    mtu 9216
+
+auto swp2
+iface swp2
+    mtu 9216
+
+auto bridge
+iface bridge
+    bridge-vlan-aware yes
+    bridge-ports peerlink
+    bridge-vids 10 20 30 40 50 100-200
+    mstpctl-treeprio 32768
+
+auto peerlink
+iface peerlink
+    bond-slaves swp1
+    mtu 9216
+
+auto peerlink.4094
+iface peerlink.4094
+    clagd-backup-ip 192.168.0.11
+    clagd-peer-ip 169.254.255.1
+    clagd-sys-mac 44:39:39:FF:40:94
+    address 169.254.255.2/30
+
+
+auto leaf01-02
+iface leaf01-02
+    bond-slaves swp2
+    clag-id 1012
+    mtu 9216
