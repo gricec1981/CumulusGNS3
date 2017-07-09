@@ -6,18 +6,18 @@ source /etc/network/interfaces.d/*.intf
 # The loopback network interface
 auto lo
 iface lo inet loopback
-   address 10.0.0.12
+    address 10.0.0.12
 # The primary network interface
 auto eth0
 iface eth0 inet static
-address 192.168.56.177
-netmask 255.255.255.0
+    address 192.168.56.176
+    netmask 255.255.255.0
 
 auto swp1
 iface swp1
 
 auto swp2
-iface swp2
+iface swp2 inet dhcp
 
 auto swp3
 iface swp3
@@ -28,23 +28,43 @@ iface swp4
 auto swp5
 iface swp5
 
+auto swp6
+iface swp6
+    bridge-access 1001
+
 auto bridge
 iface bridge
-    bridge-ports swp2 vxlan10001 vxlan10100
+    bridge-ports swp5 swp6 vtep-10001 vtep-10100
+    bridge-vids 1 1001
     bridge-vlan-aware yes
-    bridge-vids  100
-    bridge-pvid 1
 
-auto vxlan10001
-iface vxlan10001
+auto vlan1
+iface vlan1
+    address 11.0.0.100/24
+    vlan-id 1
+    vlan-raw-device bridge
+
+auto vlan1001
+iface vlan1001
+    address 12.0.0.100/24
+    vlan-id 1001
+    vlan-raw-device bridge
+
+auto vtep-10001
+iface vtep-10001
+bridge-access 1
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    mtu 9152
     vxlan-id 10001
     vxlan-local-tunnelip 10.0.0.12
-    bridge-access 1
-    bridge-learning off
 
-auto vxlan10100
-iface vxlan10100
+auto vtep-10100
+iface vtep-10100
+    bridge-access 1001
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    mtu 9152
     vxlan-id 10100
     vxlan-local-tunnelip 10.0.0.12
-    bridge-access 100
-    bridge-learning off
+
