@@ -12,7 +12,7 @@ interface swp50
 !
 line vty
 !
-router bgp 65011
+router bgp 65012
  bgp router-id 10.0.0.12
  bgp bestpath as-path multipath-relax
  neighbor fabric peer-group
